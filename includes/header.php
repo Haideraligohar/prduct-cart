@@ -85,17 +85,7 @@
                             aria-expanded="false"
                             aria-controls="aboutSubmenu">
                             About
-                            <span class="ms-2">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12" fill="none" class="chevron-icon">
-                                    <path d="M0.672852 3.59625L6.14142 8.385L11.6143 3.59625" />
-                                </svg>
-                            </span>
                         </a>
-
-                        <ul class="collapse ps-3 mt-2" id="aboutSubmenu">
-                            <li><a href="about-us.php">Company</a></li>
-                            <li><a href="meet-team.php">Meet the Team</a></li>
-                        </ul>
                     </li>
 
                     <!-- Other menu items -->
@@ -109,50 +99,9 @@
                             aria-expanded="false"
                             aria-controls="productsSubmenu">
                             Products
-                            <span class="ms-2">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12" fill="none" class="chevron-icon">
-                                    <path d="M0.672852 3.59625L6.14142 8.385L11.6143 3.59625" />
-                                </svg>
-                            </span>
                         </a>
-                        <ul class="collapse ps-3 mt-2" id="productsSubmenu">
-                            <li><a href="all-products.php"><b>All Products</b></a></li>
-                            <li><a href="all-products.php">GCX-S™ Sit-2-Stand</a></li>
-                            <li><a href="all-products.php">GCX-W™ Workstation</a></li>
-                            <li><a href="all-products.php">GCX-C™ Continuum</a></li>
-                            <li><a href="all-products.php">MASTERail™</a></li>
-                            <li><a href="all-products.php">MasterVision™</a></li>
-                            <li><a href="all-products.php">Sightline™</a></li>
-                            <li><a href="all-products.php">Podcast Desks</a></li>
-                            <li><a href="all-products.php">Accessories</a></li>
-                        </ul>
+
                     </li>
-                    <!-- Industries (with collapse submenu) -->
-                    <li>
-                        <a class="d-flex justify-content-between align-items-center"
-                            data-bs-toggle="collapse"
-                            href="#industriesSubmenu"
-                            role="button"
-                            aria-expanded="false"
-                            aria-controls="industriesSubmenu">
-                            Industries
-                            <span class="ms-2">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12" fill="none" class="chevron-icon">
-                                    <path d="M0.672852 3.59625L6.14142 8.385L11.6143 3.59625" />
-                                </svg>
-                            </span>
-                        </a>
-                        <ul class="collapse ps-3 mt-2" id="industriesSubmenu">
-                            <li><a href="industries.php"><b>All Industries</b></a></li>
-                            <li><a href="industries.php">Broadcast</a></li>
-                            <li><a href="industries.php">Houses of Worship</a></li>
-                            <li><a href="industries.php">Arenas & Stadiums</a></li>
-                            <li><a href="industries.php">Post-Production</a></li>
-                            <li><a href="industries.php">Radio & Podcast</a></li>
-                        </ul>
-                    </li>
-                    <li><a href="case-studies.php">Case Studies</a></li>
-                    <li><a href="resources.php">Resources</a></li>
                     <li><a href="contact.php">Contact</a></li>
                 </ul>
             </div>
