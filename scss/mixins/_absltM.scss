@@ -1,0 +1,5 @@
+@mixin absltM ($ptype: absolute, $dir1: left, $dir1Val: 0, $dir2: top, $dir2Val:0) {
+    position: $ptype;
+    #{$dir1}:#{$dir1Val};
+    #{$dir2}:#{$dir2Val};
+}

@@ -1,0 +1,82 @@
+.cart-wrapper {
+    .products-cart-wrapper {
+        gap: 25px;
+        padding: 50px 0px;
+
+        .product-card {
+            width: 300px;
+            background-color: #fff;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            transition: transform 0.2s;
+
+            .image-wrapper {
+                .product-image {
+                    width: 100%;
+                    height: auto;
+                    object-fit: cover;
+                }
+            }
+
+
+            .product-info {
+                padding: 16px;
+
+                h1 {
+                    @include font-size(ssm);
+                }
+
+                h2 {
+                    @include font-size(xs);
+                    margin: 0 0 8px 0;
+                }
+
+                p {
+                    font-size: 0.9rem;
+                    color: #555;
+                    margin-bottom: 12px;
+                }
+
+                .product-rating {
+                    font-size: 0.9rem;
+                    color: #f5a623;
+                    /* Gold color for stars */
+                    margin-bottom: 12px;
+                }
+
+                .product-bottom {
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+
+                    .product-price {
+                        font-size: 1.1rem;
+                        font-weight: bold;
+                        color: #333;
+                    }
+
+                    .add-to-cart {
+                        padding: 8px 12px;
+                        background-color: #007bff;
+                        color: #fff;
+                        border: none;
+                        border-radius: 6px;
+                        cursor: pointer;
+                        transition: background-color 0.2s;
+                    }
+
+                    .add-to-cart:hover {
+                        background-color: #0056b3;
+                    }
+                }
+            }
+
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+        }
+    }
+
+}

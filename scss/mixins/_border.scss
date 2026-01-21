@@ -1,0 +1,22 @@
+
+//    Border Arrow
+@mixin border(
+   $bTop: map-get($bdrStyle, bdrSize), 
+   $bLeft: map-get($bdrStyle, bdrSize), 
+   $bBtm: map-get($bdrStyle, bdrSize), 
+   $bRight: map-get($bdrStyle, bdrSize), 
+   $bTopC: map-get($bdrStyle, bdrTransparent), 
+   $bLeftC: map-get($bdrStyle, bdrColor), 
+   $bBtmC: map-get($bdrStyle, bdrTransparent), 
+   $bRightC: map-get($bdrStyle, bdrTransparent)
+   ) {
+   border-top: #{$bTop} solid #{$bTopC};
+   border-left: #{$bLeft} solid #{$bLeftC};
+   border-bottom: #{$bBtm} solid #{$bBtmC};
+   border-right: #{$bRight} solid #{$bRightC};
+}
+
+/* 
+How to Use
+@include border(10px, 10px, 10px, 10px, transparent, transparent, transparent, #000000 );
+*/

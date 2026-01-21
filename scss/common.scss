@@ -1,0 +1,19 @@
+// Base styles
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+// Prevent any horizontal scroll caused by wide gradient/blur backgrounds
+html {
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+.container {
+  margin: 0 auto;
+  width: 100%;
+  max-width: 1310;
+  padding: 0 15px;
+}

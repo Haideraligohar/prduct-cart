@@ -1,0 +1,136 @@
+
+@mixin border-radius($r1, $r2, $r3, $r4){
+   -webkit-border-radius: $r1 $r2 $r3 $r4;
+    -moz-border-radius: $r1 $r2 $r3 $r4;
+         border-radius: $r1 $r2 $r3 $r4;
+}
+
+//    Border Radius All Corners
+@mixin allRadius($cornerSize: $radiusDefault, $mSymbol: $defaultSymbol){
+   -webkit-border-radius: $cornerSize + #{$mSymbol};
+   -moz-border-radius: $cornerSize + #{$mSymbol};
+   border-radius: $cornerSize + #{$mSymbol};
+}
+
+/* 
+ USAGE:
+ -- Dafault corner is set in variable.scss file under variable name '$allCornerDefault' -- value is 5 by default
+ -- Deafault Unit is set in variable.scss file under variable name '$defaultSymbol' -- unit is px by default
+ For percentage or any symbol based measurement we have to use single quotes.
+ For text based mesurement we can write it with or without single quotes.
+
+ EXAMPLE: 
+ @include allRound(20);
+ @include allRound(20,'%');
+ @include allRound(20,em);
+
+*/
+
+// Four Border Radius
+@mixin fourRadius($tlR: $radiusDefault, $trR: $radiusDefault, $brR: $radiusDefault, $blR: $radiusDefault, $mSymbol: $defaultSymbol){
+
+   -webkit-border-top-left-radius: $tlR + #{$mSymbol};
+   -webkit-border-top-right-radius: $trR + #{$mSymbol};
+   -webkit-border-bottom-right-radius: $brR + #{$mSymbol};
+   -webkit-border-bottom-left-radius: $blR + #{$mSymbol};
+
+   -moz-border-radius-topleft: $tlR + #{$mSymbol};
+   -moz-border-radius-topright: $trR + #{$mSymbol};
+   -moz-border-radius-bottomright: $brR + #{$mSymbol};
+   -moz-border-radius-bottomleft: $blR + #{$mSymbol};
+
+   border-top-left-radius: $tlR + #{$mSymbol};
+   border-top-right-radius: $trR + #{$mSymbol};
+   border-bottom-right-radius: $brR + #{$mSymbol};
+   border-bottom-left-radius: $blR + #{$mSymbol};
+
+}
+
+/* 
+ USAGE:
+ Same as allRadius()
+
+ EXAMPLE: 
+ @include fourRadius();
+ @include fourRadius(10,10,10,10);
+ @include fourRadius(10,10,10,10,'%');
+ @include fourRadius(10,10,10,10,em);
+
+*/
+
+// Top Left Radius
+@mixin tlRadius($tlR: $radiusDefault, $mSymbol: $defaultSymbol){
+
+   -webkit-border-top-left-radius: $tlR + #{$mSymbol};
+   -moz-border-radius-topleft: $tlR + #{$mSymbol};
+   border-top-left-radius: $tlR + #{$mSymbol};
+
+}
+
+/* 
+ USAGE:
+ Same as allRadius()
+
+ EXAMPLE: 
+ @include tlRadius();
+ @include tlRadius(10, '%');
+ @include tlRadius(10, em);
+
+*/
+
+// Top Right Radius
+@mixin trRadius($trR: $radiusDefault, $mSymbol: $defaultSymbol){
+
+   -webkit-border-top-right-radius: $trR + #{$mSymbol};
+   -moz-border-radius-topright: $trR + #{$mSymbol};
+   border-top-right-radius: $trR + #{$mSymbol};
+
+}
+
+/* 
+ USAGE:
+ Same as allRadius()
+
+ EXAMPLE: 
+ @include trRadius();
+ @include trRadius(10, '%');
+ @include trRadius(10, em);
+
+*/
+
+// Bottom Right Radius
+@mixin brRadius($brR: $radiusDefault, $mSymbol: $defaultSymbol){
+   -webkit-border-bottom-right-radius: $brR + #{$mSymbol};
+   -moz-border-radius-bottomright: $brR + #{$mSymbol};
+   border-bottom-right-radius: $brR + #{$mSymbol};
+
+}
+
+/* 
+ USAGE:
+ Same as allRadius()
+
+ EXAMPLE: 
+ @include brRadius();
+ @include brRadius(10, '%');
+ @include brRadius(10, em);
+
+*/
+
+// Bottom Left Radius
+@mixin blRadius($blR: $radiusDefault, $mSymbol: $defaultSymbol){
+   -webkit-border-bottom-left-radius: $blR + #{$mSymbol};
+   -moz-border-radius-bottomleft: $blR + #{$mSymbol};
+   border-bottom-left-radius: $blR + #{$mSymbol};
+}
+
+/* 
+ USAGE:
+ Same as allRadius()
+
+ EXAMPLE: 
+ @include blRadius();
+ @include blRadius(10, '%');
+ @include blRadius(10, em);
+
+*/

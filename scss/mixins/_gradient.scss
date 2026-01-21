@@ -1,0 +1,14 @@
+//    Gradient
+
+// background: -moz-linear-gradient(0deg, #91d1ff, #a387ff);
+// background: -webkit-linear-gradient(0deg, #91d1ff, #a387ff);
+// background: -ms-linear-gradient(0deg, #91d1ff, #a387ff);
+
+
+@mixin gradient($args1,$args2){
+    -webkit-linear-gradient:(0deg, $args1, $args2);
+       -moz-linear-gradient:(0deg, $args1, $args2);
+         -o-linear-gradient:(0deg, $args1, $args2);
+           -linear-gradient:(0deg, $args1, $args2);
+}
+

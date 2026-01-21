@@ -1,0 +1,5 @@
+@mixin floatM($objDir:left, $objWidth:100%, $objHeight:auto) {
+    float: $objDir;
+    width: $objWidth;
+    height: $objHeight;
+}

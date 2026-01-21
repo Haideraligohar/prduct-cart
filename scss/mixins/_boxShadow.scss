@@ -1,0 +1,44 @@
+
+// Box Shadow
+@mixin boxS(
+   $horLen: map-get($boxShadow, horLen),
+   $verLen: map-get($boxShadow, verLen),
+   $blurRadius: map-get($boxShadow, blurRadius),
+   $spreadRadius: map-get($boxShadow, spreadRadius),
+   $shadowColor: map-get($boxShadow, shadowColor)
+   ){
+   -webkit-box-shadow: #{$horLen} #{$verLen} #{$blurRadius} #{$spreadRadius} #{$shadowColor};
+   -moz-box-shadow: #{$horLen} #{$verLen} #{$blurRadius} #{$spreadRadius} #{$shadowColor};
+   box-shadow: #{$horLen} #{$verLen} #{$blurRadius} #{$spreadRadius} #{$shadowColor};
+}
+/*
+How to Use 
+@include boxS(10px, 10px, 5px, 0px, rgba(0,0,0,0.75));
+1. Horizontal Length
+2. Vertical Length
+3. Blur Radius
+4. Spread Radius
+5. Shadow Color
+*/
+
+// Inset Shadow
+@mixin insetS(
+   $horLen: map-get($boxShadow, horLen),
+   $verLen: map-get($boxShadow, verLen),
+   $blurRadius: map-get($boxShadow, blurRadius),
+   $spreadRadius: map-get($boxShadow, spreadRadius),
+   $shadowColor: map-get($boxShadow, shadowColor)
+   ){
+   -webkit-box-shadow: inset #{$horLen} #{$verLen} #{$blurRadius} #{$spreadRadius} #{$shadowColor};
+   -moz-box-shadow: inset #{$horLen} #{$verLen} #{$blurRadius} #{$spreadRadius} #{$shadowColor};
+   box-shadow: inset #{$horLen} #{$verLen} #{$blurRadius} #{$spreadRadius} #{$shadowColor};
+}
+/*
+How to Use 
+@include insetS(10px, 10px, 5px, 0px, rgba(0,0,0,0.75));
+1. Horizontal Length
+2. Vertical Length
+3. Blur Radius
+4. Spread Radius
+5. Shadow Color
+*/
