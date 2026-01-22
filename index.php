@@ -14,7 +14,8 @@
     <div class="clearfix"></div>
     <div class="cart-wrapper">
         <div class="container ">
-            <div id="products-cart-wrapper" class="products-cart-wrapper row row-cols-xl-4 justify-content-center">         
+            <h1 class="top-heading">Products You’ll Love</h1>
+            <div id="products-cart-wrapper" class="products-cart-wrapper row row-cols-xl-4 justify-content-center">
             </div>
         </div>
     </div>
