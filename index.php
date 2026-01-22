@@ -37,8 +37,8 @@
             </div>
 
             <!-- Products container -->
-            <div id="products-cart-wrapper" class="products-cart-wrapper row row-cols-xl-4 justify-content-center">
-            </div>
+            <div class="container"><div id="products-cart-wrapper" class="products-cart-wrapper row row-cols-1 row-sm-2 row-cols-3 row-cols-lg-4 justify-content-center">
+            </div></div>
         </div>
     </div>
 
