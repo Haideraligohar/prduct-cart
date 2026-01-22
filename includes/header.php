@@ -6,7 +6,7 @@
                     <img class="logo" alt="Forecast LOGO" src="./public/shop.jpg">
                 </a>
 
-                <ul class="nav-list">
+                <ul class="nav-list d-none d-lg-flex">
                     <li class="nav-item dropdown">
                         <button class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                             About
@@ -54,8 +54,11 @@
                         </svg>
                     </a>
                 </div>
-
-                <button class="mobile-menu-btn" type="button" data-bs-toggle="offcanvas" data-bs-target="#mobileMenu" aria-controls="mobileMenu">
+                <button class="mobile-menu-btn d-inline-flex d-lg-none"
+                    type="button"
+                    data-bs-toggle="offcanvas"
+                    data-bs-target="#mobileMenu"
+                    aria-controls="mobileMenu">
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke-width="1.5">
                         <line x1="3" y1="6" x2="21" y2="6"></line>
                         <line x1="3" y1="12" x2="21" y2="12"></line>
@@ -65,47 +68,62 @@
             </div>
         </nav>
         <!-- Mobile Menu Offcanvas -->
-        <div class="offcanvas offcanvas-end" tabindex="-1" id="mobileMenu" aria-labelledby="mobileMenuLabel">
+        <!-- ================= MOBILE OFFCANVAS MENU ================= -->
+        <div class="offcanvas offcanvas-end d-lg-none"
+            tabindex="-1"
+            id="mobileMenu"
+            aria-labelledby="mobileMenuLabel">
+
             <div class="offcanvas-header">
                 <a href="./">
-                    <img class="logo" alt="Forecast LOGO" src="public/assets/forecast-2020-logo-stack-cmyk-300x71-1.png" style="width: 120px; height: auto;">
+                    <img class="logo"
+                        alt="Forecast LOGO"
+                        src="./public/shop.jpg"
+                        style="width: 120px; height: auto;">
                 </a>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+
+                <button type="button"
+                    class="btn-close btn-close-white"
+                    data-bs-dismiss="offcanvas"
+                    aria-label="Close"></button>
             </div>
 
             <div class="offcanvas-body">
-                <ul class="mobile-nav-list">
+                <ul class="mobile-nav-list list-unstyled m-0 p-0">
 
-                    <!-- About (with collapse submenu) -->
-                    <li>
-                        <a class="d-flex justify-content-between align-items-center"
-                            data-bs-toggle="collapse"
-                            href="#aboutSubmenu"
-                            role="button"
-                            aria-expanded="false"
-                            aria-controls="aboutSubmenu">
+                    <!-- About -->
+                    <li class="mb-3">
+                        <a href="about.php" class="d-block text-decoration-none">
                             About
                         </a>
                     </li>
 
-                    <!-- Other menu items -->
-                    <li><a href="shop.php">Shop</a></li>
-                    <!-- Products (with collapse submenu) -->
-                    <li>
-                        <a class="d-flex justify-content-between align-items-center"
-                            data-bs-toggle="collapse"
-                            href="#productsSubmenu"
-                            role="button"
-                            aria-expanded="false"
-                            aria-controls="productsSubmenu">
+                    <!-- Shop -->
+                    <li class="mb-3">
+                        <a href="shop.php" class="d-block text-decoration-none">
+                            Shop
+                        </a>
+                    </li>
+
+                    <!-- Products -->
+                    <li class="mb-3">
+                        <a href="products.php" class="d-block text-decoration-none">
                             Products
                         </a>
-
                     </li>
-                    <li><a href="contact.php">Contact</a></li>
+
+                    <!-- Contact -->
+                    <li class="mb-3">
+                        <a href="contact.php" class="d-block text-decoration-none">
+                            Contact
+                        </a>
+                    </li>
+
                 </ul>
             </div>
         </div>
+        <!-- ================= END MOBILE OFFCANVAS ================= -->
+
 
     </div>
 </header>
