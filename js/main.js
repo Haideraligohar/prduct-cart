@@ -45,6 +45,7 @@ fetch("./data/product.json")
           localStorage.setItem("cart", JSON.stringify(cart));
           showToast(`${productToAdd.title} added to cart!`);
           renderCart();
+          updateCartMsg(); // update header cart count
         });
       });
     }
@@ -56,16 +57,13 @@ fetch("./data/product.json")
       const price = priceFilter.value;
       const searchText = searchInput.value.toLowerCase();
 
-      // Category filter
       if (category !== "all") {
         filtered = filtered.filter((p) => p.category === category);
       }
 
-      // Price filter
       if (price === "low") filtered.sort((a, b) => a.price - b.price);
       else if (price === "high") filtered.sort((a, b) => b.price - a.price);
 
-      // Search filter
       if (searchText) {
         filtered = filtered.filter((p) =>
           p.title.toLowerCase().includes(searchText),
@@ -85,7 +83,7 @@ fetch("./data/product.json")
   })
   .catch((err) => console.error("Error loading products:", err));
 
-// CART LOGIC
+// ---------------- CART LOGIC ----------------
 let cart = JSON.parse(localStorage.getItem("cart")) || [];
 const cartContainer = document.querySelector(".products-list-table");
 
@@ -147,6 +145,7 @@ function renderCart() {
       );
       localStorage.setItem("cart", JSON.stringify(cart));
       updateSummary();
+      updateCartMsg(); // update header cart count
     });
 
     dec.addEventListener("click", () => {
@@ -157,6 +156,7 @@ function renderCart() {
         );
         localStorage.setItem("cart", JSON.stringify(cart));
         updateSummary();
+        updateCartMsg(); // update header cart count
       }
     });
   });
@@ -168,12 +168,14 @@ function renderCart() {
       cart = cart.filter((p) => p.id != id);
       localStorage.setItem("cart", JSON.stringify(cart));
       renderCart();
+      updateCartMsg(); // update header cart count
     });
   });
 
   updateSummary();
 }
 
+// ---------------- CART SUMMARY ----------------
 function updateSummary() {
   const subtotalEl = document.getElementById("subtotal-amount");
   const deliveryEl = document.getElementById("delivery-amount");
@@ -195,10 +197,18 @@ function updateSummary() {
   totalEl.textContent = `$${(subtotal + delivery + tax).toFixed(2)}`;
 }
 
-renderCart();
+// ---------------- HEADER CART COUNT ----------------
+function updateCartMsg() {
+  const cartMsgEl = document.getElementById("cart-msg");
+  if (!cartMsgEl) return;
+  const cart = JSON.parse(localStorage.getItem("cart")) || [];
+  const totalQuantity = cart.reduce((sum, p) => sum + (p.quantity || 1), 0);
+  cartMsgEl.textContent = totalQuantity;
+}
+
+// ---------------- TOAST ----------------
 function showToast(message) {
   const toastContainer = document.getElementById("toast-container");
-
   const toast = document.createElement("div");
   toast.textContent = message;
   toast.style.background = "#007bff";
@@ -212,16 +222,16 @@ function showToast(message) {
 
   toastContainer.appendChild(toast);
 
-  // fade in
   setTimeout(() => {
     toast.style.opacity = "1";
   }, 50);
 
-  // remove after 1 second
   setTimeout(() => {
     toast.style.opacity = "0";
-    setTimeout(() => {
-      toast.remove();
-    }, 300); // match the fade-out transition
+    setTimeout(() => toast.remove(), 300);
   }, 1000);
 }
+
+// ---------------- INITIAL ----------------
+renderCart();
+updateCartMsg();

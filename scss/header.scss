@@ -115,9 +115,26 @@
     }
 
     .header-icons {
+        position: relative;
         display: inline-flex;
         align-items: center;
         gap: 20px;
+
+
+        .cart-msg {
+            position: absolute;
+            top: -4px;
+            right: -6px;
+            padding:0px 5px;
+            border-radius: 8px;
+            background-color: $primary;
+
+            p {
+                
+                margin: 0;
+                font-size: 10px;
+            }
+        }
     }
 
     .header-icon {

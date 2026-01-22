@@ -53,6 +53,9 @@
                             <path d="M15.75 8.25C15.75 9.24456 15.3549 10.1984 14.6517 10.9017C13.9484 11.6049 12.9946 12 12 12C11.0054 12 10.0516 11.6049 9.34835 10.9017C8.64509 10.1984 8.25 9.24456 8.25 8.25" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
                         </svg>
                     </a>
+                    <div class="cart-msg">
+                        <p id="cart-msg">1</p>
+                    </div>
                 </div>
                 <button class="mobile-menu-btn d-inline-flex d-lg-none"
                     type="button"
@@ -64,6 +67,7 @@
                         <line x1="3" y1="12" x2="21" y2="12"></line>
                         <line x1="3" y1="18" x2="21" y2="18"></line>
                     </svg>
+
                 </button>
             </div>
         </nav>
