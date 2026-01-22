@@ -11,7 +11,12 @@
     <!-- header  -->
     <?php include('includes/header.php') ?>
     <!-- header  -->
-
+    <div id="toast-container" style="
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 9999;">
+    </div>
     <div class="clearfix"></div>
     <div class="cart-wrapper">
         <div class="container">
@@ -37,8 +42,10 @@
             </div>
 
             <!-- Products container -->
-            <div class="container"><div id="products-cart-wrapper" class="products-cart-wrapper row row-cols-1 row-sm-2 row-cols-3 row-cols-lg-4 justify-content-center">
-            </div></div>
+            <div class="container">
+                <div id="products-cart-wrapper" class="products-cart-wrapper row row-cols-1 row-sm-2 row-cols-3 row-cols-lg-4 justify-content-center">
+                </div>
+            </div>
         </div>
     </div>
 

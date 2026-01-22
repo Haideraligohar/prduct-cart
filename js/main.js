@@ -26,7 +26,7 @@ fetch("./data/product.json")
                 </div>
             </div>
         </div>
-      `
+      `,
         )
         .join("");
 
@@ -43,7 +43,7 @@ fetch("./data/product.json")
             cart.push(productToAdd);
           }
           localStorage.setItem("cart", JSON.stringify(cart));
-          alert(`${productToAdd.title} added to cart!`);
+          showToast(`${productToAdd.title} added to cart!`);
           renderCart();
         });
       });
@@ -68,7 +68,7 @@ fetch("./data/product.json")
       // Search filter
       if (searchText) {
         filtered = filtered.filter((p) =>
-          p.title.toLowerCase().includes(searchText)
+          p.title.toLowerCase().includes(searchText),
         );
       }
 
@@ -129,7 +129,7 @@ function renderCart() {
                 </div>
             </div>
         </div>
-    `
+    `,
     )
     .join("");
 
@@ -143,7 +143,7 @@ function renderCart() {
     inc.addEventListener("click", () => {
       input.value = parseInt(input.value) + 1;
       cart = cart.map((p) =>
-        p.id == id ? { ...p, quantity: parseInt(input.value) } : p
+        p.id == id ? { ...p, quantity: parseInt(input.value) } : p,
       );
       localStorage.setItem("cart", JSON.stringify(cart));
       updateSummary();
@@ -153,7 +153,7 @@ function renderCart() {
       if (input.value > 1) {
         input.value = parseInt(input.value) - 1;
         cart = cart.map((p) =>
-          p.id == id ? { ...p, quantity: parseInt(input.value) } : p
+          p.id == id ? { ...p, quantity: parseInt(input.value) } : p,
         );
         localStorage.setItem("cart", JSON.stringify(cart));
         updateSummary();
@@ -184,7 +184,7 @@ function updateSummary() {
 
   const subtotal = cart.reduce(
     (sum, p) => sum + p.price * (p.quantity || 1),
-    0
+    0,
   );
   const delivery = 0;
   const tax = subtotal * 0.1;
@@ -196,3 +196,32 @@ function updateSummary() {
 }
 
 renderCart();
+function showToast(message) {
+  const toastContainer = document.getElementById("toast-container");
+
+  const toast = document.createElement("div");
+  toast.textContent = message;
+  toast.style.background = "#007bff";
+  toast.style.color = "#fff";
+  toast.style.padding = "10px 20px";
+  toast.style.marginTop = "10px";
+  toast.style.borderRadius = "5px";
+  toast.style.boxShadow = "0 2px 6px rgba(0,0,0,0.3)";
+  toast.style.opacity = "0";
+  toast.style.transition = "opacity 0.3s ease";
+
+  toastContainer.appendChild(toast);
+
+  // fade in
+  setTimeout(() => {
+    toast.style.opacity = "1";
+  }, 50);
+
+  // remove after 1 second
+  setTimeout(() => {
+    toast.style.opacity = "0";
+    setTimeout(() => {
+      toast.remove();
+    }, 300); // match the fade-out transition
+  }, 1000);
+}
