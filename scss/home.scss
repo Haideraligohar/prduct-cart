@@ -1,10 +1,57 @@
 .cart-wrapper {
     padding: 50px 0px;
 
+    /* Filter container */
+    .product-filters {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 15px;
+        /* space between filters */
+        margin-bottom: 25px;
+        align-items: center;
+    }
+
+    /* Style for select dropdowns */
+    .product-filters select,
+    .product-filters input[type="text"] {
+        padding: 10px 15px;
+        border-radius: 8px;
+        border: 1px solid #ccc;
+        font-size: 1rem;
+        background-color: #fff;
+        color: #333;
+        cursor: pointer;
+        transition: all 0.2s ease-in-out;
+    }
+
+    /* Hover & focus effects */
+    .product-filters select:hover,
+    .product-filters select:focus,
+    .product-filters input[type="text"]:hover,
+    .product-filters input[type="text"]:focus {
+        border-color: #007bff;
+        box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+        outline: none;
+    }
+
+    /* Responsive for smaller screens */
+    @media (max-width: 576px) {
+        .product-filters {
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .product-filters select,
+        .product-filters input[type="text"] {
+            width: 100%;
+        }
+    }
+
     .top-heading {
         @include font-size(xl);
         text-align: center;
         font-family: $font-secondary;
+        margin-bottom: 30px;
     }
 
     .products-cart-wrapper {
