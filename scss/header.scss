@@ -125,12 +125,12 @@
             position: absolute;
             top: -4px;
             right: -6px;
-            padding:0px 5px;
+            padding: 0px 5px;
             border-radius: 8px;
             background-color: $primary;
 
             p {
-                
+
                 margin: 0;
                 font-size: 10px;
             }
@@ -501,4 +501,5 @@
             transform: translateY(-2px) scale(1.012);
         }
     }
+
 }
