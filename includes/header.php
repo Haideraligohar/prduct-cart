@@ -1,4 +1,4 @@
-<header>
+<header class="sticky-top">
     <div class="container">
         <nav class="navbar d-flex justify-content-between align-items-center">
             <div class="nav-wrap-left d-inline-flex align-items-center">
