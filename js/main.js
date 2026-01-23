@@ -172,7 +172,9 @@ function addCartListeners() {
         updateCartMsg();
       } else {
         showToast(
-          `No more ${product.title} available! Only ${product.quantity} in stock.`,
+          product.quantity === 0
+            ? `${product.title} is out of stock!`
+            : `No more ${product.title} available! Only ${product.quantity} in stock.`,
           "error",
         );
       }
@@ -240,7 +242,7 @@ function showToast(message, type = "success") {
   const toast = document.createElement("div");
   toast.textContent = message;
 
-  toast.style.background = type === "error" ? "#dc3545" : "#28a745"; // red / green
+  toast.style.background = type === "error" ? "#dc3545" : "#28a745";
   toast.style.color = "#fff";
   toast.style.padding = "10px 20px";
   toast.style.marginTop = "10px";

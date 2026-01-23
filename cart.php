@@ -11,7 +11,12 @@
     <!-- Header -->
     <?php include 'includes/header.php'; ?>
     <!-- Header -->
-
+    <div id="toast-container" style="
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 9999;">
+    </div>
     <main class="main-wrapper cart-page">
 
         <!-- PAGE HEADER -->
@@ -90,19 +95,6 @@
     <?php include 'includes/footer.php'; ?>
     <?php include 'includes/js.php'; ?>
 
-    <!-- Quantity Script -->
-    <script>
-        document.querySelectorAll('.qty-counter').forEach(counter => {
-            const inc = counter.querySelector('.increment');
-            const dec = counter.querySelector('.decrement');
-            const input = counter.querySelector('.qty-input');
-
-            inc.addEventListener('click', () => input.value++);
-            dec.addEventListener('click', () => {
-                if (input.value > 1) input.value--;
-            });
-        });
-    </script>
 
 </body>
 
