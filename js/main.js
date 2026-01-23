@@ -24,25 +24,26 @@ fetch("./data/product.json")
                 <div class="product-bottom">
                     <span class="product-price">$${product.price}</span>
                     <button 
-                        class="add-to-cart ${product.stock === "out_of_stock" ? "out-of-stock" : ""}" 
+                        class="add-to-cart ${product.quantity === 0 ? "out-of-stock" : ""}" 
                         data-id="${product.id}"
+                        ${product.quantity === 0 ? "disabled" : ""}
                     >
-                        ${product.stock === "out_of_stock" ? "Out of Stock" : "Add to Cart"}
+                        ${product.quantity === 0 ? "Out of Stock" : "Add to Cart"}
                     </button>
                 </div>
             </div>
         </div>
-      `
+      `,
         )
         .join("");
 
-      // Add to cart buttons
+      // ---------------- ADD TO CART LOGIC ----------------
       container.querySelectorAll(".add-to-cart").forEach((btn) => {
         btn.addEventListener("click", (e) => {
           const id = e.target.dataset.id;
-          const productToAdd = products.find((p) => p.id == id);
+          const productToAdd = filteredProducts.find((p) => p.id == id);
 
-          if (productToAdd.stock === "out_of_stock") {
+          if (productToAdd.quantity === 0) {
             showToast(`${productToAdd.title} is out of stock!`, "error");
             return;
           }
@@ -50,10 +51,14 @@ fetch("./data/product.json")
           let cart = JSON.parse(localStorage.getItem("cart")) || [];
           const existing = cart.find((p) => p.id == id);
 
-          if (existing) existing.quantity = (existing.quantity || 1) + 1;
-          else {
-            productToAdd.quantity = 1;
-            cart.push(productToAdd);
+          if (existing) {
+            if (existing.cartQuantity >= productToAdd.quantity) {
+              showToast(`No more ${productToAdd.title} available!`, "error");
+              return;
+            }
+            existing.cartQuantity += 1;
+          } else {
+            cart.push({ ...productToAdd, cartQuantity: 1 });
           }
 
           localStorage.setItem("cart", JSON.stringify(cart));
@@ -71,10 +76,14 @@ fetch("./data/product.json")
       const price = priceFilter.value;
       const searchText = searchInput.value.toLowerCase();
 
-      if (category !== "all") filtered = filtered.filter((p) => p.category === category);
+      if (category !== "all")
+        filtered = filtered.filter((p) => p.category === category);
       if (price === "low") filtered.sort((a, b) => a.price - b.price);
       else if (price === "high") filtered.sort((a, b) => b.price - a.price);
-      if (searchText) filtered = filtered.filter((p) => p.title.toLowerCase().includes(searchText));
+      if (searchText)
+        filtered = filtered.filter((p) =>
+          p.title.toLowerCase().includes(searchText),
+        );
 
       renderProducts(filtered);
     }
@@ -94,7 +103,6 @@ const cartContainer = document.querySelector(".products-list-table");
 let cart = JSON.parse(localStorage.getItem("cart")) || [];
 
 function renderCart() {
-  // Always sync with localStorage
   cart = JSON.parse(localStorage.getItem("cart")) || [];
   if (!cartContainer) return;
 
@@ -118,7 +126,7 @@ function renderCart() {
                         <div class="product-qty">
                             <div class="qty-counter">
                                 <button class="btn decrement">−</button>
-                                <input type="text" class="qty-input" value="${product.quantity || 1}" readonly>
+                                <input type="text" class="qty-input" value="${product.cartQuantity}" readonly>
                                 <button class="btn increment">+</button>
                             </div>
                         </div>
@@ -136,7 +144,7 @@ function renderCart() {
                 </div>
             </div>
         </div>
-    `
+    `,
     )
     .join("");
 
@@ -152,29 +160,39 @@ function addCartListeners() {
     const input = counter.querySelector(".qty-input");
     const id = counter.closest(".products-list-product_item").dataset.id;
 
-    inc.onclick = () => {
-      input.value = parseInt(input.value) + 1;
-      cart = cart.map((p) =>
-        p.id == id ? { ...p, quantity: parseInt(input.value) } : p
-      );
-      localStorage.setItem("cart", JSON.stringify(cart));
-      updateSummary();
-      updateCartMsg();
-    };
+    const product = cart.find((p) => p.id == id);
 
-    dec.onclick = () => {
-      if (input.value > 1) {
-        input.value = parseInt(input.value) - 1;
-        cart = cart.map((p) =>
-          p.id == id ? { ...p, quantity: parseInt(input.value) } : p
-        );
+    // Increment quantity
+    inc.onclick = () => {
+      if (product.cartQuantity < product.quantity) {
+        product.cartQuantity += 1;
+        input.value = product.cartQuantity;
         localStorage.setItem("cart", JSON.stringify(cart));
         updateSummary();
         updateCartMsg();
+      } else {
+        showToast(
+          `No more ${product.title} available! Only ${product.quantity} in stock.`,
+          "error",
+        );
+      }
+    };
+
+    // Decrement quantity
+    dec.onclick = () => {
+      if (product.cartQuantity > 1) {
+        product.cartQuantity -= 1;
+        input.value = product.cartQuantity;
+        localStorage.setItem("cart", JSON.stringify(cart));
+        updateSummary();
+        updateCartMsg();
+      } else {
+        showToast(`${product.title} cannot be less than 1!`, "error");
       }
     };
   });
 
+  // Delete product from cart
   cartContainer.querySelectorAll(".delete-btn").forEach((btn) => {
     btn.onclick = (e) => {
       const id = e.target.dataset.id;
@@ -195,7 +213,7 @@ function updateSummary() {
 
   if (!subtotalEl) return;
 
-  const subtotal = cart.reduce((sum, p) => sum + p.price * (p.quantity || 1), 0);
+  const subtotal = cart.reduce((sum, p) => sum + p.price * p.cartQuantity, 0);
   const delivery = 0;
   const tax = subtotal * 0.1;
 
@@ -210,7 +228,7 @@ function updateCartMsg() {
   const cartMsgEl = document.getElementById("cart-msg");
   if (!cartMsgEl) return;
   const cart = JSON.parse(localStorage.getItem("cart")) || [];
-  const totalQuantity = cart.reduce((sum, p) => sum + (p.quantity || 1), 0);
+  const totalQuantity = cart.reduce((sum, p) => sum + p.cartQuantity, 0);
   cartMsgEl.textContent = totalQuantity;
 }
 
