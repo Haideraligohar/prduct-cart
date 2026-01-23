@@ -1,14 +1,30 @@
+// ---------------- FILTER ELEMENTS ----------------
 const categoryFilter = document.getElementById("category-filter");
 const priceFilter = document.getElementById("price-filter");
 const searchInput = document.getElementById("search-input");
+
+// ---------------- GLOBAL CART SYNC ----------------
+document.addEventListener("DOMContentLoaded", () => {
+  updateCartMsg();
+});
+
+window.addEventListener("focus", () => {
+  updateCartMsg();
+});
+
+document.addEventListener("visibilitychange", () => {
+  if (!document.hidden) {
+    updateCartMsg();
+  }
+});
 
 // ---------------- LOAD PRODUCTS ----------------
 fetch("./data/product.json")
   .then((res) => res.json())
   .then((products) => {
     const container = document.getElementById("products-cart-wrapper");
+    if (!container) return;
 
-    // Render products function
     function renderProducts(filteredProducts) {
       container.innerHTML = filteredProducts
         .map(
@@ -26,8 +42,7 @@ fetch("./data/product.json")
                     <button 
                         class="add-to-cart ${product.quantity === 0 ? "out-of-stock" : ""}" 
                         data-id="${product.id}"
-                        ${product.quantity === 0 ? "disabled" : ""}
-                    >
+                        ${product.quantity === 0 ? "disabled" : ""}>
                         ${product.quantity === 0 ? "Out of Stock" : "Add to Cart"}
                     </button>
                 </div>
@@ -37,11 +52,12 @@ fetch("./data/product.json")
         )
         .join("");
 
-      // ---------------- ADD TO CART LOGIC ----------------
+      // ADD TO CART
       container.querySelectorAll(".add-to-cart").forEach((btn) => {
         btn.addEventListener("click", (e) => {
           const id = e.target.dataset.id;
           const productToAdd = filteredProducts.find((p) => p.id == id);
+          if (!productToAdd) return;
 
           if (productToAdd.quantity === 0) {
             showToast(`${productToAdd.title} is out of stock!`, "error");
@@ -56,7 +72,7 @@ fetch("./data/product.json")
               showToast(`No more ${productToAdd.title} available!`, "error");
               return;
             }
-            existing.cartQuantity += 1;
+            existing.cartQuantity++;
           } else {
             cart.push({ ...productToAdd, cartQuantity: 1 });
           }
@@ -69,17 +85,18 @@ fetch("./data/product.json")
       });
     }
 
-    // Apply filters and search
     function applyFilters() {
       let filtered = [...products];
-      const category = categoryFilter.value;
-      const price = priceFilter.value;
-      const searchText = searchInput.value.toLowerCase();
+      const category = categoryFilter?.value || "all";
+      const price = priceFilter?.value || "all";
+      const searchText = searchInput?.value.toLowerCase() || "";
 
       if (category !== "all")
         filtered = filtered.filter((p) => p.category === category);
+
       if (price === "low") filtered.sort((a, b) => a.price - b.price);
       else if (price === "high") filtered.sort((a, b) => b.price - a.price);
+
       if (searchText)
         filtered = filtered.filter((p) =>
           p.title.toLowerCase().includes(searchText),
@@ -88,12 +105,10 @@ fetch("./data/product.json")
       renderProducts(filtered);
     }
 
-    // Event listeners
-    categoryFilter.addEventListener("change", applyFilters);
-    priceFilter.addEventListener("change", applyFilters);
-    searchInput.addEventListener("input", applyFilters);
+    categoryFilter?.addEventListener("change", applyFilters);
+    priceFilter?.addEventListener("change", applyFilters);
+    searchInput?.addEventListener("input", applyFilters);
 
-    // Initial render
     renderProducts(products);
   })
   .catch((err) => console.error("Error loading products:", err));
@@ -109,51 +124,54 @@ function renderCart() {
   cartContainer.innerHTML = cart
     .map(
       (product) => `
-        <div class="products-list-product_item" data-id="${product.id}">
-            <div class="product-details">
-                <div class="row align-items-center">
-                    <div class="col-sm-6">
-                        <div class="product-info-wrapper">
-                            <div class="product-img">
-                                <img src="${product.image}" alt="${product.title}">
-                            </div>
-                            <div class="product-info-content">
-                                <h2 class="product-name">${product.title}</h2>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-sm-3 col-6">
-                        <div class="product-qty">
-                            <div class="qty-counter">
-                                <button class="btn decrement">−</button>
-                                <input type="text" class="qty-input" value="${product.cartQuantity}" readonly>
-                                <button class="btn increment">+</button>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-sm-3 col-6">
-                        <div class="product-price-wrapper">
-                            <div class="product-price">
-                                <h4>$${product.price}</h4>
-                            </div>
-                            <div class="product-delete">
-                                <div class="delete-btn" data-id="${product.id}">×</div>
-                            </div>
-                        </div>
-                    </div>
+      <div class="products-list-product_item" data-id="${product.id}">
+        <div class="product-details">
+          <div class="row align-items-center">
+            <div class="col-sm-6">
+              <div class="product-info-wrapper">
+                <div class="product-img">
+                  <img src="${product.image}" alt="${product.title}">
                 </div>
+                <div class="product-info-content">
+                  <h2 class="product-name">${product.title}</h2>
+                </div>
+              </div>
             </div>
+            <div class="col-sm-3 col-6">
+              <div class="product-qty">
+                <div class="qty-counter">
+                  <button class="btn decrement">−</button>
+                  <input type="text" class="qty-input" value="${product.cartQuantity}" readonly>
+                  <button class="btn increment">+</button>
+                </div>
+              </div>
+            </div>
+            <div class="col-sm-3 col-6">
+              <div class="product-price-wrapper">
+                <div class="product-price">
+                  <h4>$${product.price}</h4>
+                </div>
+                <div class="product-delete">
+                  <div class="delete-btn" data-id="${product.id}">×</div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
+      </div>
     `,
     )
     .join("");
 
   addCartListeners();
   updateSummary();
+  updateCartMsg(); // ⭐ sync header
 }
 
 // ---------------- CART LISTENERS ----------------
 function addCartListeners() {
+  if (!cartContainer) return;
+
   cartContainer.querySelectorAll(".qty-counter").forEach((counter) => {
     const inc = counter.querySelector(".increment");
     const dec = counter.querySelector(".decrement");
@@ -161,29 +179,23 @@ function addCartListeners() {
     const id = counter.closest(".products-list-product_item").dataset.id;
 
     const product = cart.find((p) => p.id == id);
+    if (!product) return;
 
-    // Increment quantity
     inc.onclick = () => {
       if (product.cartQuantity < product.quantity) {
-        product.cartQuantity += 1;
+        product.cartQuantity++;
         input.value = product.cartQuantity;
         localStorage.setItem("cart", JSON.stringify(cart));
         updateSummary();
         updateCartMsg();
       } else {
-        showToast(
-          product.quantity === 0
-            ? `${product.title} is out of stock!`
-            : `No more ${product.title} available! Only ${product.quantity} in stock.`,
-          "error",
-        );
+        showToast(`No more ${product.title} available!`, "error");
       }
     };
 
-    // Decrement quantity
     dec.onclick = () => {
       if (product.cartQuantity > 1) {
-        product.cartQuantity -= 1;
+        product.cartQuantity--;
         input.value = product.cartQuantity;
         localStorage.setItem("cart", JSON.stringify(cart));
         updateSummary();
@@ -194,7 +206,6 @@ function addCartListeners() {
     };
   });
 
-  // Delete product from cart
   cartContainer.querySelectorAll(".delete-btn").forEach((btn) => {
     btn.onclick = (e) => {
       const id = e.target.dataset.id;
@@ -206,13 +217,12 @@ function addCartListeners() {
   });
 }
 
-// ---------------- CART SUMMARY ----------------
+// ---------------- SUMMARY ----------------
 function updateSummary() {
   const subtotalEl = document.getElementById("subtotal-amount");
   const deliveryEl = document.getElementById("delivery-amount");
   const taxEl = document.getElementById("tax-amount");
   const totalEl = document.getElementById("total-amount");
-
   if (!subtotalEl) return;
 
   const subtotal = cart.reduce((sum, p) => sum + p.price * p.cartQuantity, 0);
@@ -225,10 +235,11 @@ function updateSummary() {
   totalEl.textContent = `$${(subtotal + delivery + tax).toFixed(2)}`;
 }
 
-// ---------------- HEADER CART COUNT ----------------
+// ---------------- HEADER COUNT ----------------
 function updateCartMsg() {
   const cartMsgEl = document.getElementById("cart-msg");
   if (!cartMsgEl) return;
+
   const cart = JSON.parse(localStorage.getItem("cart")) || [];
   const totalQuantity = cart.reduce((sum, p) => sum + p.cartQuantity, 0);
   cartMsgEl.textContent = totalQuantity;
@@ -241,7 +252,6 @@ function showToast(message, type = "success") {
 
   const toast = document.createElement("div");
   toast.textContent = message;
-
   toast.style.background = type === "error" ? "#dc3545" : "#28a745";
   toast.style.color = "#fff";
   toast.style.padding = "10px 20px";
@@ -257,7 +267,7 @@ function showToast(message, type = "success") {
   setTimeout(() => {
     toast.style.opacity = "0";
     setTimeout(() => toast.remove(), 300);
-  }, 1000);
+  }, 1500);
 }
 
 // ---------------- INITIAL ----------------
