@@ -4,6 +4,8 @@ const priceFilter = document.getElementById("price-filter");
 const searchInput = document.getElementById("search-input");
 
 // ---------------- GLOBAL CART SYNC ----------------
+let allProducts = [];
+
 document.addEventListener("DOMContentLoaded", () => {
   updateCartMsg();
   renderCart();
@@ -12,12 +14,14 @@ document.addEventListener("DOMContentLoaded", () => {
 window.addEventListener("focus", () => {
   updateCartMsg();
   renderCart();
+  renderProducts(allProducts);
 });
 
 document.addEventListener("visibilitychange", () => {
   if (!document.hidden) {
     updateCartMsg();
     renderCart();
+    renderProducts(allProducts);
   }
 });
 
@@ -25,96 +29,112 @@ document.addEventListener("visibilitychange", () => {
 fetch("./data/product.json")
   .then((res) => res.json())
   .then((products) => {
-    const container = document.getElementById("products-cart-wrapper");
-    if (!container) return;
-
-    function renderProducts(filteredProducts) {
-      container.innerHTML = filteredProducts
-        .map(
-          (product) => `
-        <div class="product-card">
-            <div class="image-wrapper">
-                <img src="${product.image}" alt="${product.title}" class="product-image img-fluid">
-            </div>
-            <div class="product-info">
-                <h2 class="product-title">${product.title}</h2>
-                <h1>${product.category}</h1>
-                <p class="product-description">${product.description.substring(0, 50)}...</p>
-                <div class="product-bottom">
-                    <span class="product-price">$${product.price}</span>
-                    <button 
-                        class="add-to-cart ${product.quantity === 0 ? "out-of-stock" : ""}" 
-                        data-id="${product.id}"
-                        ${product.quantity === 0 ? "disabled" : ""}>
-                        ${product.quantity === 0 ? "Out of Stock" : "Add to Cart"}
-                    </button>
-                </div>
-            </div>
-        </div>
-      `,
-        )
-        .join("");
-
-      // ADD TO CART
-      container.querySelectorAll(".add-to-cart").forEach((btn) => {
-        btn.addEventListener("click", (e) => {
-          const id = e.target.dataset.id;
-          const productToAdd = filteredProducts.find((p) => p.id == id);
-          if (!productToAdd) return;
-
-          if (productToAdd.quantity === 0) {
-            showToast(`${productToAdd.title} is out of stock!`, "error");
-            return;
-          }
-
-          let cart = JSON.parse(localStorage.getItem("cart")) || [];
-          const existing = cart.find((p) => p.id == id);
-
-          if (existing) {
-            if (existing.cartQuantity >= productToAdd.quantity) {
-              showToast(`No more ${productToAdd.title} available!`, "error");
-              return;
-            }
-            existing.cartQuantity++;
-          } else {
-            cart.push({ ...productToAdd, cartQuantity: 1 });
-          }
-
-          localStorage.setItem("cart", JSON.stringify(cart));
-          showToast(`${productToAdd.title} added to cart!`);
-          renderCart();
-          updateCartMsg();
-        });
-      });
-    }
-
-    function applyFilters() {
-      let filtered = [...products];
-      const category = categoryFilter?.value || "all";
-      const price = priceFilter?.value || "all";
-      const searchText = searchInput?.value.toLowerCase() || "";
-
-      if (category !== "all")
-        filtered = filtered.filter((p) => p.category === category);
-
-      if (price === "low") filtered.sort((a, b) => a.price - b.price);
-      else if (price === "high") filtered.sort((a, b) => b.price - a.price);
-
-      if (searchText)
-        filtered = filtered.filter((p) =>
-          p.title.toLowerCase().includes(searchText),
-        );
-
-      renderProducts(filtered);
-    }
+    // Ensure numeric fields (id and quantity and price) are numbers
+    allProducts = products.map((p) => ({
+      ...p,
+      id: Number(p.id),
+      quantity: Number(p.quantity),
+      price: Number(p.price),
+    }));
+    renderProducts(allProducts);
 
     categoryFilter?.addEventListener("change", applyFilters);
     priceFilter?.addEventListener("change", applyFilters);
     searchInput?.addEventListener("input", applyFilters);
-
-    renderProducts(products);
   })
   .catch((err) => console.error("Error loading products:", err));
+
+// ---------------- FILTER FUNCTION ----------------
+function applyFilters() {
+  let filtered = [...allProducts];
+  const category = categoryFilter?.value || "all";
+  const price = priceFilter?.value || "all";
+  const searchText = (searchInput?.value || "").toLowerCase();
+
+  if (category !== "all")
+    filtered = filtered.filter((p) => p.category === category);
+  if (price === "low") filtered.sort((a, b) => a.price - b.price);
+  else if (price === "high") filtered.sort((a, b) => b.price - a.price);
+  if (searchText)
+    filtered = filtered.filter((p) =>
+      p.title.toLowerCase().includes(searchText),
+    );
+
+  renderProducts(filtered);
+}
+
+// ---------------- RENDER PRODUCTS ----------------
+function renderProducts(products) {
+  const container = document.getElementById("products-cart-wrapper");
+  if (!container) return;
+
+  const cart = getCart();
+
+  container.innerHTML = products
+    .map((product) => {
+      const inCart = cart.find((c) => Number(c.id) === Number(product.id));
+      const available = Number(product.quantity) - (inCart?.cartQuantity || 0);
+
+      return `
+    <div class="product-card" data-id="${product.id}">
+        <div class="image-wrapper">
+            <img src="${product.image}" alt="${product.title}" class="product-image img-fluid">
+        </div>
+        <div class="product-info">
+            <h2 class="product-title">${product.title}</h2>
+            <h1>${product.category}</h1>
+            <p class="product-description">${product.description.substring(0, 50)}...</p>
+            <p class="product-availibility" style="color: ${available === 0 ? "red" : "#FF6F40"};">
+                Available: <span class="product-qty-span">${available}</span>
+            </p>
+            <div class="product-bottom">
+                <span class="product-price">$${product.price.toFixed(2)}</span>
+                <button 
+                    class="add-to-cart ${available === 0 ? "out-of-stock" : ""}" 
+                    data-id="${product.id}"
+                    ${available === 0 ? "disabled" : ""}>
+                    ${available === 0 ? "Out of Stock" : "Add to Cart"}
+                </button>
+            </div>
+        </div>
+    </div>`;
+    })
+    .join("");
+
+  // attach add-to-cart listeners
+  container.querySelectorAll(".add-to-cart").forEach((btn) => {
+    btn.addEventListener("click", (e) => {
+      const id = Number(e.currentTarget.dataset.id);
+      const product = allProducts.find((p) => p.id === id);
+      if (!product) return;
+
+      let cart = getCart();
+      const existing = cart.find((c) => Number(c.id) === id);
+      const available = product.quantity - (existing?.cartQuantity || 0);
+
+      if (available <= 0) {
+        showToast(`${product.title} is out of stock!`, "error");
+        return;
+      }
+
+      if (existing) existing.cartQuantity++;
+      else
+        cart.push({
+          id: product.id,
+          title: product.title,
+          price: product.price,
+          image: product.image,
+          cartQuantity: 1,
+        });
+
+      saveCart(cart);
+      showToast(`${product.title} added to cart!`);
+      renderCart();
+      renderProducts(allProducts);
+      updateCartMsg();
+    });
+  });
+}
 
 // ---------------- CART LOGIC ----------------
 const cartContainer = document.querySelector(".products-list-table");
@@ -141,42 +161,41 @@ function renderCart() {
   cartContainer.innerHTML = cart
     .map(
       (product) => `
-      <div class="products-list-product_item" data-id="${product.id}">
-        <div class="product-details">
-          <div class="row align-items-center">
-            <div class="col-sm-6">
-              <div class="product-info-wrapper">
-                <div class="product-img">
-                  <img src="${product.image}" alt="${product.title}">
-                </div>
-                <div class="product-info-content">
-                  <h2 class="product-name">${product.title}</h2>
-                </div>
+    <div class="products-list-product_item" data-id="${product.id}">
+      <div class="product-details">
+        <div class="row align-items-center">
+          <div class="col-sm-6">
+            <div class="product-info-wrapper">
+              <div class="product-img">
+                <img src="${product.image}" alt="${product.title}">
+              </div>
+              <div class="product-info-content">
+                <h2 class="product-name">${product.title}</h2>
               </div>
             </div>
-            <div class="col-sm-3 col-6">
-              <div class="product-qty">
-                <div class="qty-counter">
-                  <button class="btn decrement">−</button>
-                  <input type="text" class="qty-input" value="${product.cartQuantity}" readonly>
-                  <button class="btn increment">+</button>
-                </div>
+          </div>
+          <div class="col-sm-3 col-6">
+            <div class="product-qty">
+              <div class="qty-counter">
+                <button class="btn decrement">−</button>
+                <input type="text" class="qty-input" value="${product.cartQuantity}" readonly>
+                <button class="btn increment">+</button>
               </div>
             </div>
-            <div class="col-sm-3 col-6">
-              <div class="product-price-wrapper">
-                <div class="product-price">
-                  <h4>$${product.price}</h4>
-                </div>
-                <div class="product-delete">
-                  <div class="delete-btn" data-id="${product.id}">×</div>
-                </div>
+          </div>
+          <div class="col-sm-3 col-6">
+            <div class="product-price-wrapper">
+              <div class="product-price">
+                <h4>$${product.price.toFixed(2)}</h4>
+              </div>
+              <div class="product-delete">
+                <div class="delete-btn" data-id="${product.id}">×</div>
               </div>
             </div>
           </div>
         </div>
       </div>
-    `,
+    </div>`,
     )
     .join("");
 
@@ -189,49 +208,60 @@ function renderCart() {
 function addCartListeners() {
   if (!cartContainer) return;
 
-  const cart = getCart();
-
+  // Quantity controls
   cartContainer.querySelectorAll(".qty-counter").forEach((counter) => {
     const inc = counter.querySelector(".increment");
     const dec = counter.querySelector(".decrement");
     const input = counter.querySelector(".qty-input");
-    const id = counter.closest(".products-list-product_item").dataset.id;
-
-    const product = cart.find((p) => p.id == id);
-    if (!product) return;
+    const id = Number(
+      counter.closest(".products-list-product_item").dataset.id,
+    );
 
     inc.onclick = () => {
-      if (product.cartQuantity < product.quantity) {
-        product.cartQuantity++;
-        input.value = product.cartQuantity;
+      const cart = getCart();
+      const cartItem = cart.find((p) => Number(p.id) === id);
+      const productData = allProducts.find((p) => Number(p.id) === id);
+      if (!cartItem || !productData) return;
+
+      const available =
+        Number(productData.quantity) - Number(cartItem.cartQuantity);
+
+      if (available > 0) {
+        cartItem.cartQuantity = Number(cartItem.cartQuantity) + 1;
         saveCart(cart);
-        updateSummary();
-        updateCartMsg();
+        renderCart();
+        renderProducts(allProducts);
       } else {
-        showToast(`No more ${product.title} available!`, "error");
+        showToast(`No more ${productData.title} available!`, "error");
       }
     };
 
     dec.onclick = () => {
-      if (product.cartQuantity > 1) {
-        product.cartQuantity--;
-        input.value = product.cartQuantity;
+      const cart = getCart();
+      const cartItem = cart.find((p) => Number(p.id) === id);
+      const productData = allProducts.find((p) => Number(p.id) === id);
+      if (!cartItem || !productData) return;
+
+      if (cartItem.cartQuantity > 1) {
+        cartItem.cartQuantity = Number(cartItem.cartQuantity) - 1;
         saveCart(cart);
-        updateSummary();
-        updateCartMsg();
+        renderCart();
+        renderProducts(allProducts);
       } else {
-        showToast(`${product.title} cannot be less than 1!`, "error");
+        showToast(`${productData.title} cannot be less than 1!`, "error");
       }
     };
   });
 
+  // Delete buttons
   cartContainer.querySelectorAll(".delete-btn").forEach((btn) => {
     btn.onclick = (e) => {
-      const id = e.target.dataset.id;
-      let cart = getCart();
-      cart = cart.filter((p) => p.id != id);
+      const id = Number(e.currentTarget.dataset.id);
+      let cart = getCart().filter((p) => Number(p.id) !== id);
       saveCart(cart);
       renderCart();
+      renderProducts(allProducts);
+      updateCartMsg();
     };
   });
 }
@@ -245,7 +275,10 @@ function updateSummary() {
   if (!subtotalEl) return;
 
   const cart = getCart();
-  const subtotal = cart.reduce((sum, p) => sum + p.price * p.cartQuantity, 0);
+  const subtotal = cart.reduce(
+    (sum, p) => sum + Number(p.price) * Number(p.cartQuantity),
+    0,
+  );
   const delivery = 0;
   const tax = subtotal * 0.1;
 
@@ -261,7 +294,10 @@ function updateCartMsg() {
   if (!cartMsgEl) return;
 
   const cart = getCart();
-  const totalQuantity = cart.reduce((sum, p) => sum + p.cartQuantity, 0);
+  const totalQuantity = cart.reduce(
+    (sum, p) => sum + Number(p.cartQuantity),
+    0,
+  );
   cartMsgEl.textContent = totalQuantity;
 }
 
