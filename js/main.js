@@ -307,15 +307,9 @@ function showToast(message, type = "success") {
   if (!toastContainer) return;
 
   const toast = document.createElement("div");
+  toast.className = "error";
   toast.textContent = message;
   toast.style.background = type === "error" ? "#dc3545" : "#28a745";
-  toast.style.color = "#fff";
-  toast.style.padding = "10px 20px";
-  toast.style.marginTop = "10px";
-  toast.style.borderRadius = "5px";
-  toast.style.boxShadow = "0 2px 6px rgba(0,0,0,0.3)";
-  toast.style.opacity = "0";
-  toast.style.transition = "opacity 0.3s ease";
 
   toastContainer.appendChild(toast);
 
