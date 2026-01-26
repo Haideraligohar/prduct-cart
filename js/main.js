@@ -307,13 +307,18 @@ function showToast(message, type = "success") {
   if (!toastContainer) return;
 
   const toast = document.createElement("div");
-  toast.className = "error";
+
+  toast.className = type; // "error" or "success"
   toast.textContent = message;
-  toast.style.background = type === "error" ? "#dc3545" : "#28a745";
 
   toastContainer.appendChild(toast);
 
-  setTimeout(() => (toast.style.opacity = "1"), 50);
+  // Fade in
+  requestAnimationFrame(() => {
+    toast.style.opacity = "1";
+  });
+
+  // Fade out
   setTimeout(() => {
     toast.style.opacity = "0";
     setTimeout(() => toast.remove(), 300);

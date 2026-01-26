@@ -251,7 +251,13 @@ body {
         background-color: #ccc !important;
     }
 
-    .error {
+
+}
+
+#toast-container {
+
+    .error,
+    .success {
         color: #fff;
         padding: 10px 20px;
         margin-top: 10px;
@@ -259,5 +265,13 @@ body {
         box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
         opacity: 0;
         transition: opacity 0.3s ease;
+    }
+
+    .error {
+        background: #dc3545;
+    }
+
+    .success {
+        background: #28a745;
     }
 }
