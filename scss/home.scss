@@ -17,21 +17,7 @@ body {
         padding: 25px 0px;
     }
 
-    .filter-selector {
-        padding: 0 15px;
-
-        @include md {
-            padding: 0 10px;
-        }
-
-        @include xs {
-            padding: 0 4px;
-        }
-
-        @include sm {
-            padding: 0 4px;
-        }
-    }
+    .filter-selector {}
 
     /* Filter container */
     .product-filters {
@@ -103,7 +89,7 @@ body {
     }
 
     .products-cart-wrapper {
-        gap: 25px;
+        gap: 35px;
         padding: 50px 0px;
 
         @include lg {
@@ -177,7 +163,6 @@ body {
                 .product-availibility {
                     @include font-size(body);
                     font-weight: bold;
-                    color: $primary;
                     margin-bottom: 5px;
                 }
 

@@ -54,7 +54,7 @@
                         </svg>
                     </a>
                     <div class="cart-msg">
-                        <p id="cart-msg">1</p>
+                        <p id="cart-msg"></p>
                     </div>
                 </div>
                 <button class="mobile-menu-btn d-inline-flex d-lg-none"
